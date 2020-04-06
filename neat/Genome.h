@@ -42,6 +42,7 @@ namespace neat
 		//! 
 		const SortedGeneMap& GeneMap();
 
+
 	private:
 
 		SortedGeneMap _Genes;

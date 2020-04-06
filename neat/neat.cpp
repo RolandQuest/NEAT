@@ -23,6 +23,15 @@ namespace neat
 
 		CurrentPopulation = new Population();
 
+		//Creating initial nodes.
+		NodePool.CreateNode(NodeType::BIAS);
+		for (size_t i = 0; i < inputNodes; i++) {
+			NodePool.CreateNode(NodeType::SENSOR);
+		}
+		for (size_t i = 0; i < outputNodes; i++) {
+			NodePool.CreateNode(NodeType::OUTPUT);
+		}
+
 		//Adding +1 for the bias.
 		inputNodes++;
 
@@ -78,6 +87,7 @@ namespace neat
 
 	void reset() {
 		GenePool.Nuke();
+		NodePool.Nuke();
 		ClearHistory();
 		delete CurrentPopulation;
 		_Generation = 0;
@@ -101,6 +111,7 @@ namespace neat
 
 	std::mt19937 Rando(time(0));
 	GeneManager GenePool;
+	NodeManager NodePool;
 	Population* CurrentPopulation;
 	std::vector<Population*> PopulationHistory;
 

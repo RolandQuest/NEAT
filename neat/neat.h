@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "GeneManager.h"
+#include "NodeManager.h"
 #include "Population.h"
 
 namespace neat
@@ -34,11 +35,13 @@ namespace neat
 	extern std::mt19937 Rando;
 	//! Control for the innovations.
 	extern GeneManager GenePool;
+	//! Control for the nodes.
+	extern NodeManager NodePool;
 	//! The current population.
 	extern Population* CurrentPopulation;
 	//! All previous populations.
 	extern std::vector<Population*> PopulationHistory;
-
+	
 	///
 	/// Population Settings
 	///

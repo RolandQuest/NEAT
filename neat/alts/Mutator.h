@@ -14,13 +14,13 @@ namespace neat
 	public:
 
 		//! Mutates the genome in a random way.
-		static Genome* MutateRandom(Genome* orig);
+		static bool MutateRandom(Genome* orig, Genome*& child);
 
 		//! Mutates the genome by
-		static Genome* MutateAddConnection(Genome* orig);
+		static bool MutateAddConnection(Genome* orig, Genome*& child);
 
 		//! Mutates the genome by
-		static Genome* MutateAddNode(Genome* orig);
+		static bool MutateAddNode(Genome* orig, Genome*& child);
 
 	};
 }

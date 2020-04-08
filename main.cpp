@@ -3,14 +3,14 @@
 
 #include "neat.h"
 #include "Genome.h"
-#include "Mutator.h"
+#include "alts/Mutator.h"
 
 
 void GenomeTest() {
 
+	neat::Genome* g2;
 	neat::Genome* g = neat::CurrentPopulation->Genomes()[0];
-
-	neat::Genome* g2 = neat::Mutator::MutateAddConnection(g);
+	neat::Mutator::MutateAddConnection(g, g2);
 
 	for (auto& entry : g->GetGeneData()) {
 

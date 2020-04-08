@@ -10,16 +10,12 @@ namespace neat
 {
 
 
-	Genome* Mutator::MutateRandom(Genome* orig) {
-
-		return nullptr;
+	bool Mutator::MutateRandom(Genome* orig, Genome*& child) {
+		return false;
 	}
 
-	//MAKE THESE RETURN BOOL AND PASS IN THE CONTAINER
+	bool Mutator::MutateAddConnection(Genome* orig, Genome*& child) {
 
-	Genome* Mutator::MutateAddConnection(Genome* orig) {
-
-		Genome* ret = new Genome(*orig);
 		int inputOffset = NodePool.InputNodes().size() + 1;
 
 		std::set<int> availableFromNodes;
@@ -62,23 +58,22 @@ namespace neat
 					InnovationPool.Register(innov);
 				}
 
-				ret->AddGene(g);
-				break;
+				child = new Genome(*orig);
+				child->AddGene(g);
+				return true;
 			}
 
 			attempts++;
 		}
 
-		return ret;
+		return false;
 	}
 
-	Genome* Mutator::MutateAddNode(Genome* orig) {
-
-		Genome* ret = new Genome(*orig);
+	bool Mutator::MutateAddNode(Genome* orig, Genome*& child) {
 
 		//Find eligible connections to add node to.
 		std::vector<GeneData*> availableCons;
-		for (auto& entry : ret->GetGeneData()) {
+		for (auto& entry : orig->GetGeneData()) {
 
 			if (!entry.props.frozen && entry.props.enabled) {
 				availableCons.push_back(&entry);
@@ -86,8 +81,7 @@ namespace neat
 		}
 
 		if (availableCons.size() == 0) {
-			//Read note above. Should be returning false.
-			return ret;
+			return false;
 		}
 
 		//Find the link and disconnect it.
@@ -106,16 +100,18 @@ namespace neat
 
 		//The innovation and genes should line up... this might be ripe with simplifications.
 		Gene* gene;
+		child = new Genome(*orig);
+
 		if (!GenePool.FindGene(gene, innov->From(), innov->NewNodeId())) {
 			gene = GenePool.CreateGene(innov->From(), innov->NewNodeId());
 		}
-		ret->AddGene(gene);
+		child->AddGene(gene);
 		if (!GenePool.FindGene(gene, innov->NewNodeId(), innov->To())) {
 			gene = GenePool.CreateGene(innov->NewNodeId(), innov->To());
 		}
-		ret->AddGene(gene);
+		child->AddGene(gene);
 
-		return ret;
+		return true;
 	}
 
 }

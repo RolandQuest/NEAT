@@ -32,7 +32,7 @@ namespace neat
 
 
 		//! Adds a gene with given properties.
-		GeneData& AddGene(Gene* gene, GeneProperties& props);
+		GeneData& AddGene(Gene* gene, const GeneProperties& props);
 
 		//! Adds a gene with default properties.
 		GeneData& AddGene(Gene* gene);

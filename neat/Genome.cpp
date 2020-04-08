@@ -10,7 +10,7 @@ namespace neat
 		_IsSorted = other._IsSorted;
 	}
 
-	GeneData& Genome::AddGene(Gene* gene, GeneProperties& props) {
+	GeneData& Genome::AddGene(Gene* gene, const GeneProperties& props) {
 
 		_GeneData.emplace_back();
 		_GeneData[_GeneData.size() - 1].gene = gene;

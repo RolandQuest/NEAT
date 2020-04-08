@@ -4,7 +4,7 @@
 #include <tuple>
 
 #include "Genome.h"
-#include "Mutator.h"
+#include "alts/AlterationHub.h"
 
 namespace neat
 {
@@ -94,18 +94,11 @@ namespace neat
 
 	void iterateGeneration() {
 
+		Population* newPopulation;
+		AlterationHub::CreateNextGeneration(CurrentPopulation, newPopulation);
+
 		PopulationHistory.push_back(CurrentPopulation);
-		CurrentPopulation = new Population();
-
-		//test code
-		std::vector<Genome*> gs = PopulationHistory[PopulationHistory.size() - 1]->Genomes();
-
-		for (size_t i = 0; i < PopulationSize; i++) {
-
-			Genome* g = Mutator::MutateAddConnection(gs[i]);
-
-			CurrentPopulation->AddGenome(g);
-		}
+		CurrentPopulation = new Population;
 
 		_Generation++;
 	}

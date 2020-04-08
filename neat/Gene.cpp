@@ -2,10 +2,10 @@
 
 namespace neat
 {
-	Gene::Gene(int inNode, int outNode, int innovationNum) {
+	Gene::Gene(int inNode, int outNode, int geneId) {
 		_InputNode = inNode;
 		_OutputNode = outNode;
-		_InnovationNumber = innovationNum;
+		_GeneId = geneId;
 	}
 
 	int Gene::InputNode() const {
@@ -16,8 +16,8 @@ namespace neat
 		return _OutputNode;
 	}
 
-	int Gene::InnovationNumber() const {
-		return _InnovationNumber;
+	int Gene::GeneId() const {
+		return _GeneId;
 	}
 }
 

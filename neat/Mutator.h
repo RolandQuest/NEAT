@@ -1,7 +1,7 @@
 #ifndef MUTATOR_H
 #define MUTATOR_H
 
-#include "Genome.h""
+#include "Genome.h"
 
 namespace neat
 {
@@ -17,7 +17,10 @@ namespace neat
 		static Genome* MutateRandom(Genome* orig);
 
 		//! Mutates the genome by
-		static Genome* Mutate(Genome* orig);
+		static Genome* MutateAddConnection(Genome* orig);
+
+		//! Mutates the genome by
+		static Genome* MutateAddNode(Genome* orig);
 
 	};
 }

@@ -4,6 +4,7 @@
 #include <tuple>
 
 #include "Genome.h"
+#include "Mutator.h"
 
 namespace neat
 {
@@ -23,7 +24,7 @@ namespace neat
 
 		CurrentPopulation = new Population();
 
-		//Creating initial nodes.
+		//Record the nodes.
 		NodePool.CreateNode(NodeType::BIAS);
 		for (size_t i = 0; i < inputNodes; i++) {
 			NodePool.CreateNode(NodeType::SENSOR);
@@ -72,28 +73,53 @@ namespace neat
 
 				Gene* gene;
 				if (!GenePool.FindGene(gene, con.first, con.second)) {
+
+					//Record the gene.
 					gene = GenePool.CreateGene(con.first, con.second);
+
+					//Record the innovation.
+					Innovation* innov = new Innovation(con.first, con.second);
+					InnovationPool.Register(innov);
 				}
 
-				GeneProperties p;
-				p.weight = distWeight(Rando);
-
-				genome->AddGene(gene, p);
+				//Initialize and add to the genome.
+				GeneData& p = genome->AddGene(gene);
+				p.props.weight = distWeight(Rando);
 			}
 
 			CurrentPopulation->AddGenome(genome);
 		}
+
+	}
+
+	void iterateGeneration() {
+
+		PopulationHistory.push_back(CurrentPopulation);
+		CurrentPopulation = new Population();
+
+		//test code
+		std::vector<Genome*> gs = PopulationHistory[PopulationHistory.size() - 1]->Genomes();
+
+		for (size_t i = 0; i < PopulationSize; i++) {
+
+			Genome* g = Mutator::MutateAddConnection(gs[i]);
+
+			CurrentPopulation->AddGenome(g);
+		}
+
+		_Generation++;
 	}
 
 	void reset() {
+		InnovationPool.Nuke();
 		GenePool.Nuke();
 		NodePool.Nuke();
-		ClearHistory();
+		clearHistory();
 		delete CurrentPopulation;
 		_Generation = 0;
 	}
 
-	void ClearHistory() {
+	void clearHistory() {
 
 		for (auto& entry : PopulationHistory) {
 			delete entry;
@@ -101,7 +127,11 @@ namespace neat
 		PopulationHistory.clear();
 	}
 
-	int Generation() {
+	Population* lastGeneration() {
+		return PopulationHistory[PopulationHistory.size() - 1];
+	}
+
+	int generationCount() {
 		return _Generation;
 	}
 
@@ -110,6 +140,7 @@ namespace neat
 	///
 
 	std::mt19937 Rando(time(0));
+	InnovationManager InnovationPool;
 	GeneManager GenePool;
 	NodeManager NodePool;
 	Population* CurrentPopulation;

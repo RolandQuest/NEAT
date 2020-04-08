@@ -1,5 +1,7 @@
 #include "GeneManager.h"
 
+#include <iostream>
+
 namespace neat
 {
 
@@ -13,7 +15,7 @@ namespace neat
 
 	bool GeneManager::FindGene(Gene*& gene, int inNode, int outNode) {
 
-		for (auto& g : _GenerationalGenePool) {
+		for (auto& g : _GenePool) {
 			
 			if (g->InputNode() == inNode && g->OutputNode() == outNode) {
 				gene = g;
@@ -25,18 +27,10 @@ namespace neat
 
 	Gene* GeneManager::CreateGene(int inNode, int outNode) {
 
-		Gene* g = new Gene(inNode, outNode, _InnovationId);
-		_GenerationalGenePool.push_back(g);
-		_InnovationId++;
+		Gene* g = new Gene(inNode, outNode, _GeneIdIncrementer);
+		_GenePool.push_back(g);
+		_GeneIdIncrementer++;
 		return g;
-	}
-
-	void GeneManager::EndGeneration() {
-
-		for (auto& gene : _GenerationalGenePool) {
-			_GenePool.push_back(gene);
-		}
-		_GenerationalGenePool.clear();
 	}
 
 	void GeneManager::Nuke() {
@@ -44,11 +38,8 @@ namespace neat
 		for (auto& gene : _GenePool) {
 			delete gene;
 		}
-		for (auto& gene : _GenerationalGenePool) {
-			delete gene;
-		}
 		_GenePool.clear();
-		_GenerationalGenePool.clear();
-		_InnovationId = 0;
+		_GeneIdIncrementer = 0;
 	}
+
 }

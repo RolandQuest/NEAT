@@ -5,8 +5,9 @@
 #include <random>
 #include <time.h>
 
-#include "GeneManager.h"
-#include "NodeManager.h"
+#include "innov/InnovationManager.h"
+#include "man/GeneManager.h"
+#include "man/NodeManager.h"
 #include "Population.h"
 
 namespace neat
@@ -18,14 +19,20 @@ namespace neat
 	//! Initializes the system. Calls reset before initializing.
 	void init(int inputNodes, int outputNodes);
 
+	//! Logs the current generation and generates the next.
+	void iterateGeneration();
+
 	//! Completely wipes the system.
 	void reset();
 
 	//! Clears the population history books.
-	void ClearHistory();
+	void clearHistory();
+
+	//! Returns the last generation.
+	Population* lastGeneration();
 
 	//! Returns the current generation (0 index).
-	int Generation();
+	int generationCount();
 
 	///
 	/// Common objects.
@@ -34,6 +41,8 @@ namespace neat
 	//! Rng used for the neat objects.
 	extern std::mt19937 Rando;
 	//! Control for the innovations.
+	extern InnovationManager InnovationPool;
+	//! Control for the genes.
 	extern GeneManager GenePool;
 	//! Control for the nodes.
 	extern NodeManager NodePool;

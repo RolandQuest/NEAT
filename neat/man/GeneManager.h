@@ -37,9 +37,6 @@ namespace neat
 		//! 
 		Gene* CreateGene(int inNode, int outNode);
 
-		//! Ends the generation for newly created genes.
-		void EndGeneration();
-
 		//! Completely resets the manager.
 		void Nuke();
 
@@ -48,11 +45,8 @@ namespace neat
 		//! Complete gene pool.
 		std::vector<Gene*> _GenePool;
 
-		//! Generation gene pool.
-		std::vector<Gene*> _GenerationalGenePool;
-
 		//! Innovation increment
-		int _InnovationId = 0;
+		int _GeneIdIncrementer = 0;
 
 	};
 }

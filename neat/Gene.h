@@ -30,7 +30,7 @@ namespace neat
 
 
 		//! Constructor
-		Gene(int inNode, int outNode, int innovationNum);
+		Gene(int inNode, int outNode, int geneId);
 
 		//! Destructor
 		virtual ~Gene() = default;
@@ -48,13 +48,13 @@ namespace neat
 		int OutputNode() const;
 
 		//! The innovation number.
-		int InnovationNumber() const;
+		int GeneId() const;
 
 	private:
 
 		int _InputNode;
 		int _OutputNode;
-		int _InnovationNumber;
+		int _GeneId;
 
 	};
 
@@ -62,7 +62,7 @@ namespace neat
 	struct GeneComparator
 	{
 		bool operator() (const Gene* g1, const Gene* g2) const {
-			return g1->InnovationNumber() < g2->InnovationNumber();
+			return g1->GeneId() < g2->GeneId();
 		}
 	};
 }

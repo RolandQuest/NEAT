@@ -48,8 +48,11 @@ namespace neat
 		int matching = 0;
 		double totalWeightDiff = 0.0;
 
-		const SortedGeneMap& g1Genes = g1->GeneMap();
-		const SortedGeneMap& g2Genes = g2->GeneMap();
+		g1->SortGenes();
+		g2->SortGenes();
+
+		const std::vector<GeneData>& g1Genes = g1->GetGeneData();
+		const std::vector<GeneData>& g2Genes = g2->GetGeneData();
 		auto g1End = std::end(g1Genes);
 		auto g2End = std::end(g2Genes);
 		auto g1Cur = std::begin(g1Genes);
@@ -69,11 +72,11 @@ namespace neat
 				continue;
 			}
 
-			Gene* gene1 = g1Cur->first;
-			Gene* gene2 = g2Cur->first;
+			Gene* gene1 = g1Cur->gene;
+			Gene* gene2 = g2Cur->gene;
 
-			if (gene1->InnovationNumber() == gene2->InnovationNumber()) {
-				totalWeightDiff += abs(g1Cur->second.weight - g2Cur->second.weight);
+			if (gene1->GeneId() == gene2->GeneId()) {
+				totalWeightDiff += abs(g1Cur->props.weight - g2Cur->props.weight);
 				matching++;
 				g1Cur++;
 				g2Cur++;
@@ -82,7 +85,7 @@ namespace neat
 
 			disjoint++;
 
-			if (gene1->InnovationNumber() < gene2->InnovationNumber()) {
+			if (gene1->GeneId() < gene2->GeneId()) {
 				g1Cur++;
 			}
 			else {

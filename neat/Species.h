@@ -7,24 +7,19 @@
 
 namespace neat
 {
+	/**
+		
+	*/
 	class Species
 	{
 
 	public:
-
-		///
-		/// ctors/dtors
-		///
 
 		//! Constructor
 		Species() = default;
 
 		//! Destructor
 		virtual ~Species();
-
-		///
-		/// Species
-		///
 
 		//! Calculates the shared fitness of the species.
 		double SharedFitness();
@@ -45,7 +40,6 @@ namespace neat
 	private:
 
 		std::vector<Genome*> _Genomes;
-
 
 	};
 }

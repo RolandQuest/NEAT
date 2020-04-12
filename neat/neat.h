@@ -8,7 +8,7 @@
 #include "innov/InnovationManager.h"
 #include "man/GeneManager.h"
 #include "man/NodeManager.h"
-#include "Population.h"
+#include "liv/Population.h"
 
 namespace neat
 {
@@ -48,8 +48,6 @@ namespace neat
 	extern NodeManager NodePool;
 	//! The current population.
 	extern Population* CurrentPopulation;
-	//! All previous populations.
-	extern std::vector<Population*> PopulationHistory;
 	
 	///
 	/// Population Settings

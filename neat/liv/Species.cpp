@@ -2,16 +2,57 @@
 
 #include <math.h>
 
+//TODO: Needed for Delta coefficients and thresholds.
+//TODO: Find a way of injecting this instead.
 #include "neat.h"
 
 namespace neat
 {
+	Species::Species(int genBorn, Genome* templ) : ILifeForm(genBorn) {
+		_Template = templ;
+		_History = new SpeciesHistory();
+	}
 
 	Species::~Species() {
 
 		for (auto& g : _Genomes) {
 			delete g;
 		}
+	}
+
+	///
+	/// ILifeForm
+	///
+
+	Species* Species::GrowOlder() {
+		
+		//TODO: Use a random genome from previous generation as the template.
+		Species* ret = new Species(Born(), Champion());
+
+		SpeciesHistory& newHistory = (SpeciesHistory&)(*ret->_History);
+		newHistory = GetHistory();
+		newHistory.pastSelves.push_back(this);
+
+		double currentChampFitness = Champion()->GetFitness();
+		if (currentChampFitness > newHistory.bestFitness_champ) {
+			newHistory.bestFitness_champ = currentChampFitness;
+			newHistory.ageOfBestFitness_champ = newHistory.pastSelves.size() - 1;
+		}
+		double currentSharedFitness = SharedFitness();
+		if (currentSharedFitness >= newHistory.bestFitness_shared) {
+			newHistory.bestFitness_shared = currentSharedFitness;
+			newHistory.ageOfBestFitness_shared = newHistory.pastSelves.size() - 1;
+		}
+
+		for (auto& g : _Genomes) {
+			ret->GetGenomes().push_back(g->GrowOlder());
+		}
+
+		return ret;
+	}
+
+	const SpeciesHistory& Species::GetHistory() const {
+		return (SpeciesHistory&)*_History;
 	}
 
 	///
@@ -23,7 +64,7 @@ namespace neat
 		double total = 0.0;
 
 		for (auto& genome : _Genomes) {
-			total += genome->Fitness();
+			total += genome->GetFitness();
 		}
 
 		return total / _Genomes.size();
@@ -33,8 +74,24 @@ namespace neat
 		_Genomes.push_back(g);
 	}
 
-	const std::vector<Genome*>& Species::Genomes() {
+	void Species::SortByFitness() {
+
+		std::sort(std::begin(_Genomes), std::end(_Genomes),
+			[](Genome* g1, Genome* g2) {
+				return g1->GetFitness() < g2->GetFitness();
+			});
+	}
+
+	Genome* Species::Champion() const {
+		return _Genomes[0];
+	}
+
+	std::vector<Genome*>& Species::GetGenomes() {
 		return _Genomes;
+	}
+
+	double Species::Delta(Genome* wanderer) {
+		return Delta(_Template, wanderer);
 	}
 
 	///

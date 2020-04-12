@@ -1,7 +1,7 @@
 #ifndef MUTATOR_H
 #define MUTATOR_H
 
-#include "Genome.h"
+#include "liv/Genome.h"
 
 namespace neat
 {

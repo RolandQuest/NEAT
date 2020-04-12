@@ -23,22 +23,11 @@ namespace neat
 
 	public:
 
-
-		///
-		/// ctors/dtors
-		///
-
-
 		//! Constructor
 		Gene(int inNode, int outNode, int geneId);
 
 		//! Destructor
 		virtual ~Gene() = default;
-
-
-		///
-		/// Gene
-		///
 
 
 		//! The input node.
@@ -58,13 +47,6 @@ namespace neat
 
 	};
 
-	//! Used to sort genes by innovation number.
-	struct GeneComparator
-	{
-		bool operator() (const Gene* g1, const Gene* g2) const {
-			return g1->GeneId() < g2->GeneId();
-		}
-	};
 }
 
 

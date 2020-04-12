@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "neat.h"
-#include "Genome.h"
+#include "liv/Genome.h"
 #include "alts/Mutator.h"
 
 

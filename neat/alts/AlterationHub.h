@@ -1,7 +1,7 @@
 #ifndef ALTERATIONHUB_H
 #define ALTERATIONHUB_H
 
-#include "Population.h"
+#include "liv/Population.h"
 
 namespace neat
 {
@@ -14,8 +14,19 @@ namespace neat
 	public:
 
 		//! 
-		static void CreateNextGeneration(Population* currentPopulation, Population*& newPopulation);
+		static void CreateNextGeneration(int curGen, Population* currentPopulation, Population*& newPopulation);
 
+		//! 
+		static void Nuke();
+
+		//! 
+		static double bestFitness;
+
+		//! 
+		static int bestFitnessGeneration;
+
+		//! 
+		static int generationsSinceImprovement;
 	};
 }
 

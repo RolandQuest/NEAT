@@ -1,7 +1,7 @@
 #ifndef BREEDER_H
 #define BREEDER_H
 
-#include "Genome.h"
+#include "liv/Genome.h"
 
 namespace neat
 {

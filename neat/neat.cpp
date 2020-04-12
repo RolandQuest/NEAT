@@ -3,7 +3,7 @@
 #include <vector>
 #include <tuple>
 
-#include "Genome.h"
+#include "liv/Genome.h"
 #include "alts/AlterationHub.h"
 
 namespace neat
@@ -22,7 +22,7 @@ namespace neat
 
 		reset();
 
-		CurrentPopulation = new Population();
+		CurrentPopulation = new Population(_Generation);
 
 		//Record the nodes.
 		NodePool.CreateNode(NodeType::BIAS);
@@ -94,11 +94,12 @@ namespace neat
 
 	void iterateGeneration() {
 
-		Population* newPopulation;
-		AlterationHub::CreateNextGeneration(CurrentPopulation, newPopulation);
+		CurrentPopulation->SettleDown();
 
-		PopulationHistory.push_back(CurrentPopulation);
-		CurrentPopulation = new Population;
+		//Population* newPopulation;
+		//AlterationHub::CreateNextGeneration(_Generation, CurrentPopulation, newPopulation);
+
+		//CurrentPopulation = new Population;
 
 		_Generation++;
 	}
@@ -107,6 +108,7 @@ namespace neat
 		InnovationPool.Nuke();
 		GenePool.Nuke();
 		NodePool.Nuke();
+		AlterationHub::Nuke();
 		clearHistory();
 		delete CurrentPopulation;
 		_Generation = 0;
@@ -114,14 +116,14 @@ namespace neat
 
 	void clearHistory() {
 
-		for (auto& entry : PopulationHistory) {
-			delete entry;
-		}
-		PopulationHistory.clear();
+		//for (auto& entry : PopulationHistory) {
+			//delete entry;
+		//}
+		//PopulationHistory.clear();
 	}
 
 	Population* lastGeneration() {
-		return PopulationHistory[PopulationHistory.size() - 1];
+		//return PopulationHistory[PopulationHistory.size() - 1];
 	}
 
 	int generationCount() {
@@ -137,7 +139,6 @@ namespace neat
 	GeneManager GenePool;
 	NodeManager NodePool;
 	Population* CurrentPopulation;
-	std::vector<Population*> PopulationHistory;
 
 	///
 	/// Population Settings

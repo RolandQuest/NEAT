@@ -4,11 +4,38 @@
 
 namespace neat
 {
-	Genome::Genome(Genome& other) {
-
-		_GeneData = other._GeneData;
-		_IsSorted = other._IsSorted;
+	Genome::Genome(int genBorn) : ILifeForm(genBorn) {
+		_History = new GenomeHistory();
 	}
+
+	Genome::~Genome() {
+
+	}
+
+	///
+	/// ILifeForm
+	///
+
+	Genome* Genome::GrowOlder() {
+
+		Genome* ret = new Genome(Born());
+
+		GenomeHistory& newHistory = (GenomeHistory&)(*ret->_History);
+		newHistory = GetHistory();
+		newHistory.pastSelves.push_back(this);
+
+		ret->GetGeneData() = _GeneData;
+
+		return ret;
+	}
+
+	const GenomeHistory& Genome::GetHistory() const {
+		return (GenomeHistory&) *_History;
+	}
+
+	///
+	/// Genome
+	///
 
 	GeneData& Genome::AddGene(Gene* gene, const GeneProperties& props) {
 
@@ -27,7 +54,7 @@ namespace neat
 		return _GeneData[_GeneData.size() - 1];
 	}
 
-	bool Genome::ContainsGene(int fromNode, int toNode) {
+	bool Genome::ContainsGene(int fromNode, int toNode) const {
 
 		for (const auto& con : _GeneData) {
 			if (con.gene->InputNode() == fromNode && con.gene->OutputNode() == toNode) {
@@ -41,7 +68,7 @@ namespace neat
 		_Fitness = fit;
 	}
 
-	double Genome::Fitness() {
+	double Genome::GetFitness() const {
 		return _Fitness;
 	}
 

@@ -1,8 +1,8 @@
 #include "neat.h"
 
-#include <vector>
 #include <tuple>
 
+#include "neat_settings.h"
 #include "liv/Genome.h"
 #include "alts/AlterationHub.h"
 
@@ -22,7 +22,7 @@ namespace neat
 
 		reset();
 
-		CurrentPopulation = new Population(_Generation);
+		CurrentPopulation = new Population();
 
 		//Record the nodes.
 		NodePool.CreateNode(NodeType::BIAS);
@@ -94,12 +94,11 @@ namespace neat
 
 	void iterateGeneration() {
 
-		CurrentPopulation->SettleDown();
+		Population* newPopulation;
+		AlterationHub::CreateNextGeneration(_Generation, CurrentPopulation, newPopulation);
 
-		//Population* newPopulation;
-		//AlterationHub::CreateNextGeneration(_Generation, CurrentPopulation, newPopulation);
-
-		//CurrentPopulation = new Population;
+		delete CurrentPopulation;
+		CurrentPopulation = newPopulation;
 
 		_Generation++;
 	}
@@ -109,11 +108,12 @@ namespace neat
 		GenePool.Nuke();
 		NodePool.Nuke();
 		AlterationHub::Nuke();
-		clearHistory();
+		//clearHistory();
 		delete CurrentPopulation;
 		_Generation = 0;
 	}
 
+	/*
 	void clearHistory() {
 
 		//for (auto& entry : PopulationHistory) {
@@ -125,6 +125,7 @@ namespace neat
 	Population* lastGeneration() {
 		//return PopulationHistory[PopulationHistory.size() - 1];
 	}
+	*/
 
 	int generationCount() {
 		return _Generation;
@@ -134,32 +135,9 @@ namespace neat
 	/// Common objects.
 	///
 
-	std::mt19937 Rando(time(0));
 	InnovationManager InnovationPool;
 	GeneManager GenePool;
 	NodeManager NodePool;
 	Population* CurrentPopulation;
-
-	///
-	/// Population Settings
-	///
-
-	int PopulationSize = 100;
-
-	///
-	/// Weight Settings
-	///
-
-	double InitialConnectionWeightMax = 2.0;
-	double ConnectionWeightMax = 8.0;
-
-	///
-	/// Speciation Settings
-	///
-
-	double SpeciationDeltaThresh = 8.0;
-	double CompatExcessCoeff = 1.0;
-	double CompatDisjointCoeff = 1.0;
-	double CompatWeightCoeff = 1.0;
 
 }

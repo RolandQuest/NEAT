@@ -2,47 +2,25 @@
 #define SPECIES_H
 
 #include <vector>
+#include <random>
 
-#include "ILifeForm.h"
 #include "Genome.h"
 
 namespace neat
 {
-	class Species;
-
-	//! Tracks historical information regarding a species.
-	struct SpeciesHistory : public IHistory {
-		std::vector<Species*> pastSelves;
-		double bestFitness_champ = 0.0;
-		double bestFitness_shared = 0.0;
-		int ageOfBestFitness_champ = 0;
-		int ageOfBestFitness_shared = 0;
-	};
-
 	/**
 		A group of genomes that are similar in topography.
 	*/
-	class Species : public ILifeForm
+	class Species
 	{
 
 	public:
 
 		//! Constructor
-		Species(int genBorn, Genome* templ);
+		Species(Genome* templ);
 
 		//! Destructor
 		virtual ~Species();
-
-
-		///
-		/// ILifeFrom
-		///
-
-		//! Tells the lifeform to handle aging by 1 generation.
-		Species* GrowOlder();
-
-		//! Returns the history of this lifeform.
-		const SpeciesHistory& GetHistory() const;
 
 
 		///
@@ -65,6 +43,9 @@ namespace neat
 		std::vector<Genome*>& GetGenomes();
 
 		//!
+		Species* GetHollowClone(std::mt19937& rng);
+
+		//!
 		double Delta(Genome* wanderer);
 
 		//!
@@ -75,6 +56,8 @@ namespace neat
 		Genome* _Template;
 
 		std::vector<Genome*> _Genomes;
+
+		int _Age = 0;
 	};
 }
 

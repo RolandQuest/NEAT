@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "ILifeForm.h"
 #include "man/Gene.h"
 
 namespace neat
@@ -14,39 +13,22 @@ namespace neat
 		GeneProperties props;
 	};
 
-	class Genome;
-
-	//! Tracks historical information regarding a genome.
-	struct GenomeHistory : public IHistory {
-		Genome* mother;
-		Genome* father;
-		std::vector<Genome*> pastSelves;
-	};
-
 	/**
 		A grouping of genes and associated fitness data.
 	*/
-	class Genome : public ILifeForm
+	class Genome
 	{
 
 	public:
 		
 		//! Constructor
-		Genome(int genBorn);
+		Genome() = default;
+
+		//! Copy Constructor
+		Genome(Genome* g);
 
 		//! Destructor
-		virtual ~Genome();
-
-
-		///
-		/// ILifeFrom
-		///
-
-		//! Tells the lifeform to handle aging by 1 generation.
-		Genome* GrowOlder();
-
-		//! Returns the history of this lifeform.
-		const GenomeHistory& GetHistory() const;
+		virtual ~Genome() = default;
 
 
 		///

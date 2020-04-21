@@ -2,15 +2,12 @@
 
 #include <math.h>
 
-//TODO: Needed for Delta coefficients and thresholds.
-//TODO: Find a way of injecting this instead.
-#include "neat.h"
+#include "neat_settings.h"
 
 namespace neat
 {
-	Species::Species(int genBorn, Genome* templ) : ILifeForm(genBorn) {
+	Species::Species(Genome* templ) {
 		_Template = templ;
-		_History = new SpeciesHistory();
 	}
 
 	Species::~Species() {
@@ -18,41 +15,6 @@ namespace neat
 		for (auto& g : _Genomes) {
 			delete g;
 		}
-	}
-
-	///
-	/// ILifeForm
-	///
-
-	Species* Species::GrowOlder() {
-		
-		//TODO: Use a random genome from previous generation as the template.
-		Species* ret = new Species(Born(), Champion());
-
-		SpeciesHistory& newHistory = (SpeciesHistory&)(*ret->_History);
-		newHistory = GetHistory();
-		newHistory.pastSelves.push_back(this);
-
-		double currentChampFitness = Champion()->GetFitness();
-		if (currentChampFitness > newHistory.bestFitness_champ) {
-			newHistory.bestFitness_champ = currentChampFitness;
-			newHistory.ageOfBestFitness_champ = newHistory.pastSelves.size() - 1;
-		}
-		double currentSharedFitness = SharedFitness();
-		if (currentSharedFitness >= newHistory.bestFitness_shared) {
-			newHistory.bestFitness_shared = currentSharedFitness;
-			newHistory.ageOfBestFitness_shared = newHistory.pastSelves.size() - 1;
-		}
-
-		for (auto& g : _Genomes) {
-			ret->GetGenomes().push_back(g->GrowOlder());
-		}
-
-		return ret;
-	}
-
-	const SpeciesHistory& Species::GetHistory() const {
-		return (SpeciesHistory&)*_History;
 	}
 
 	///
@@ -88,6 +50,14 @@ namespace neat
 
 	std::vector<Genome*>& Species::GetGenomes() {
 		return _Genomes;
+	}
+
+	Species* Species::GetHollowClone(std::mt19937& rng) {
+
+		std::uniform_int_distribution<size_t> dist(0, _Genomes.size() - 1);
+		Species* ret = new Species(new Genome(_Genomes[dist(rng)]));
+		ret->_Age = _Age + 1;
+		return ret;
 	}
 
 	double Species::Delta(Genome* wanderer) {

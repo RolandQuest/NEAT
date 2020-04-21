@@ -1,13 +1,9 @@
 #include "Population.h"
 
-#include "neat.h"
+#include "neat_settings.h"
 
 namespace neat
 {
-	Population::Population(int genBorn) : ILifeForm(genBorn) {
-		_History = new PopulationHistory();
-	}
-
 	Population::~Population() {
 		
 		for (auto& spec : _Species) {
@@ -15,34 +11,6 @@ namespace neat
 		}
 	}
 
-	///
-	/// ILifeForm
-	///
-
-	Population* Population::GrowOlder() {
-
-		Population* ret = new Population(Born());
-
-		PopulationHistory& newHistory = (PopulationHistory&)(*ret->_History);
-		newHistory = GetHistory();
-		newHistory.pastSelves.push_back(this);
-
-		double curGenChampionFitness = _Species[0]->Champion()->GetFitness();
-		if (curGenChampionFitness > newHistory.bestFitness) {
-			newHistory.bestFitness = curGenChampionFitness;
-			newHistory.ageOfBestFitness = newHistory.pastSelves.size() - 1;
-		}
-
-		for (auto& spec : _Species) {
-			ret->GetSpecies().push_back(spec->GrowOlder());
-		}
-
-		return ret;
-	}
-
-	const PopulationHistory& Population::GetHistory() const {
-		return (PopulationHistory&)*_History;
-	}
 
 	///
 	/// Population
@@ -58,8 +26,12 @@ namespace neat
 			}
 		}
 
-		Species* s = new Species(Born(), g);
+		Species* s = new Species(g);
 		s->AddGenome(g);
+		_Species.push_back(s);
+	}
+
+	void Population::AddSpecies(Species* s) {
 		_Species.push_back(s);
 	}
 
@@ -71,7 +43,7 @@ namespace neat
 
 		std::vector<Genome*> ret;
 		for (auto& spec : _Species) {
-			ret.insert(std::end(ret), std::begin(spec->Genomes()), std::end(spec->Genomes()));
+			ret.insert(std::end(ret), std::begin(spec->GetGenomes()), std::end(spec->GetGenomes()));
 		}
 
 		return ret;

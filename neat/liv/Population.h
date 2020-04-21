@@ -3,45 +3,24 @@
 
 #include <vector>
 
-#include "ILifeForm.h"
 #include "Genome.h"
 #include "Species.h"
 
 namespace neat
 {
-	class Population;
-
-	//!
-	struct PopulationHistory : public IHistory {
-		std::vector<Population*> pastSelves;
-		double bestFitness = 0.0;
-		int ageOfBestFitness = 0;
-	};
-
 	/**
 
 	*/
-	class Population : public ILifeForm
+	class Population
 	{
 
 	public:
 
 		//! Constructor
-		Population(int genBorn);
+		Population() = default;
 
 		//! Destructor
 		virtual ~Population();
-
-
-		///
-		/// ILifeFrom
-		///
-
-		//! Tells the lifeform to handle aging by 1 generation.
-		Population* GrowOlder();
-
-		//! Returns the history of this lifeform.
-		const PopulationHistory& GetHistory() const;
 
 
 		///
@@ -50,6 +29,9 @@ namespace neat
 
 		//! 
 		void AddGenome(Genome* g);
+
+		//!
+		void AddSpecies(Species* s);
 
 		//!
 		std::vector<Species*>& GetSpecies();

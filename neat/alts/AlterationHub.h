@@ -1,6 +1,8 @@
 #ifndef ALTERATIONHUB_H
 #define ALTERATIONHUB_H
 
+#include <random>
+
 #include "liv/Population.h"
 
 namespace neat
@@ -18,6 +20,11 @@ namespace neat
 
 		//! 
 		static void Nuke();
+
+
+		///
+		/// Historical records of all past populations. Does this really belong here?
+		///
 
 		//! 
 		static double bestFitness;

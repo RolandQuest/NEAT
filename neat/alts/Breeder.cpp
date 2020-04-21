@@ -15,7 +15,7 @@ namespace neat
 		Genome* strong;
 		Genome* weak;
 
-		if (mother->Fitness() > father->Fitness()) {
+		if (mother->GetFitness() > father->GetFitness()) {
 			strong = mother;
 			weak = father;
 		}

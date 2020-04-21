@@ -4,33 +4,9 @@
 
 namespace neat
 {
-	Genome::Genome(int genBorn) : ILifeForm(genBorn) {
-		_History = new GenomeHistory();
-	}
-
-	Genome::~Genome() {
-
-	}
-
-	///
-	/// ILifeForm
-	///
-
-	Genome* Genome::GrowOlder() {
-
-		Genome* ret = new Genome(Born());
-
-		GenomeHistory& newHistory = (GenomeHistory&)(*ret->_History);
-		newHistory = GetHistory();
-		newHistory.pastSelves.push_back(this);
-
-		ret->GetGeneData() = _GeneData;
-
-		return ret;
-	}
-
-	const GenomeHistory& Genome::GetHistory() const {
-		return (GenomeHistory&) *_History;
+	Genome::Genome(Genome* g) {
+		_GeneData = g->GetGeneData();
+		_Fitness = g->GetFitness();
 	}
 
 	///

@@ -28,7 +28,7 @@ namespace neat
 		///
 
 		//! Calculates the shared fitness of the species.
-		double SharedFitness();
+		//double SharedFitness();
 
 		//! 
 		void AddGenome(Genome* g);
@@ -46,6 +46,21 @@ namespace neat
 		Species* GetHollowClone(std::mt19937& rng);
 
 		//!
+		int GetAge();
+
+		//! 
+		int GetAgeOfLastImprovement();
+
+		//!
+		void SetAgeOfLastImprovement(int age);
+
+		//! 
+		double GetBestFitness();
+
+		//!
+		void SetBestFitness(double fitness);
+
+		//!
 		double Delta(Genome* wanderer);
 
 		//!
@@ -54,10 +69,14 @@ namespace neat
 	private:
 
 		Genome* _Template;
+		bool deleteTemplate = false;
 
 		std::vector<Genome*> _Genomes;
 
 		int _Age = 0;
+		int _AgeOfLastImprovement = 0;
+		double _BestFitness = 0.0;
+		
 	};
 }
 

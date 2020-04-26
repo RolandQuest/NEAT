@@ -43,7 +43,7 @@ namespace neat
 		size_t SpeciesCount();
 
 		//! 
-		void SettleDown();
+		void SettleDown(int generation);
 
 	private:
 

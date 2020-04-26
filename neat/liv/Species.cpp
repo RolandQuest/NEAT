@@ -15,12 +15,15 @@ namespace neat
 		for (auto& g : _Genomes) {
 			delete g;
 		}
+		if (deleteTemplate) {
+			delete _Template;
+		}
 	}
 
 	///
 	/// Species
 	///
-
+	/*
 	double Species::SharedFitness() {
 
 		double total = 0.0;
@@ -31,7 +34,7 @@ namespace neat
 
 		return total / _Genomes.size();
 	}
-
+	*/
 	void Species::AddGenome(Genome* g) {
 		_Genomes.push_back(g);
 	}
@@ -57,7 +60,30 @@ namespace neat
 		std::uniform_int_distribution<size_t> dist(0, _Genomes.size() - 1);
 		Species* ret = new Species(new Genome(_Genomes[dist(rng)]));
 		ret->_Age = _Age + 1;
+		ret->_AgeOfLastImprovement = _AgeOfLastImprovement;
+		ret->_BestFitness = _BestFitness;
+		ret->deleteTemplate = true;
 		return ret;
+	}
+
+	int Species::GetAge() {
+		return _Age;
+	}
+
+	int Species::GetAgeOfLastImprovement() {
+		return _AgeOfLastImprovement;
+	}
+
+	void Species::SetAgeOfLastImprovement(int age) {
+		_AgeOfLastImprovement = age;
+	}
+
+	double Species::GetBestFitness() {
+		return _BestFitness;
+	}
+
+	void Species::SetBestFitness(double fitness) {
+		_BestFitness = fitness;
 	}
 
 	double Species::Delta(Genome* wanderer) {

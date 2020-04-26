@@ -1,4 +1,4 @@
-#include "innov/Innovation.h"
+#include "man/Innovation.h"
 
 namespace neat
 {

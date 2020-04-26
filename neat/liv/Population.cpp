@@ -53,10 +53,17 @@ namespace neat
 		return _Species.size();
 	}
 
-	void Population::SettleDown() {
+	void Population::SettleDown(int generation) {
 
 		for (auto& spec : _Species) {
 			spec->SortByFitness();
+
+			//Originally done after determining no improvement.
+			//This did not make sense to me so I am checking this now.
+			if (spec->GetGenomes()[0]->GetFitness() > spec->GetBestFitness()) {
+				spec->SetAgeOfLastImprovement(generation);
+				spec->SetAgeOfLastImprovement(spec->GetGenomes()[0]->GetFitness());
+			}
 		}
 
 		std::sort(std::begin(_Species), std::end(_Species),

@@ -56,7 +56,6 @@ namespace neat
 		//! Sorts the genes according to the gene id.
 		void SortGenes();
 
-
 	private:
 
 		std::vector<GeneData> _GeneData;

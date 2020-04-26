@@ -1,10 +1,7 @@
 #ifndef NEAT_H
 #define NEAT_H
 
-#include "innov/InnovationManager.h"
-#include "man/GeneManager.h"
-#include "man/NodeManager.h"
-#include "liv/Population.h"
+#include "neat_settings.h"
 
 namespace neat
 {
@@ -30,19 +27,6 @@ namespace neat
 	//! Returns the current generation (0 index).
 	int generationCount();
 
-	///
-	/// Common objects.
-	///
-
-	//! Control for the innovations.
-	extern InnovationManager InnovationPool;
-	//! Control for the genes.
-	extern GeneManager GenePool;
-	//! Control for the nodes.
-	extern NodeManager NodePool;
-	//! The current population.
-	extern Population* CurrentPopulation;
-	
 }
 
 #endif

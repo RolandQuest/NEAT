@@ -2,7 +2,6 @@
 
 #include <tuple>
 
-#include "neat_settings.h"
 #include "liv/Genome.h"
 #include "alts/AlterationHub.h"
 
@@ -131,13 +130,5 @@ namespace neat
 		return _Generation;
 	}
 
-	///
-	/// Common objects.
-	///
-
-	InnovationManager InnovationPool;
-	GeneManager GenePool;
-	NodeManager NodePool;
-	Population* CurrentPopulation;
 
 }

@@ -3,12 +3,6 @@
 
 namespace neat
 {
-	//! The type of innovation.
-	enum class InnovationType : int {
-		kNode,
-		kLink
-	};
-
 	/**
 		An invariant class for innovations.
 		A new node innovation represents splitting of a link into two others.
@@ -25,8 +19,6 @@ namespace neat
 		//! Destructor.
 		virtual ~Innovation() = default;
 
-		//! Returns the innovation type.
-		InnovationType Type();
 
 		//! Returns the 'from' node.
 		int From();
@@ -39,7 +31,6 @@ namespace neat
 
 	private:
 
-		InnovationType _Type = InnovationType::kLink;
 		int _FromNode = -1;
 		int _ToNode = -1;
 		int _NewNode = -1;

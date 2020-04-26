@@ -25,10 +25,6 @@ namespace neat
 		return _AllNodes.size() - 1;
 	}
 	
-	Node* NodeManager::CopyNode(size_t nodeId) {
-		return new Node(_AllNodes[nodeId]->Type());
-	}
-
 	const std::vector<Node*>& NodeManager::InputNodes() {
 		return _InputNodes;
 	}

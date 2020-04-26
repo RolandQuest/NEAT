@@ -4,16 +4,9 @@ namespace neat
 {
 	Innovation::Innovation(int from, int to, int newNodeId){
 
-		if (newNodeId != -1) {
-			_Type = InnovationType::kNode;
-			_NewNode = newNodeId;
-		}
 		_FromNode = from;
 		_ToNode = to;
-	}
-
-	InnovationType Innovation::Type(){
-		return _Type;
+		_NewNode = newNodeId;
 	}
 
 	int Innovation::From(){

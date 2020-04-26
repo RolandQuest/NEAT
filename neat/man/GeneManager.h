@@ -7,19 +7,11 @@
 
 namespace neat
 {
-
-	/**
-		Has ownership of all created genes.
-
-	*/
+	//! Has ownership of all created genes.
 	class GeneManager
 	{
 
 	public:
-
-		///
-		/// ctors/dtors
-		///
 
 		//! Constructor
 		GeneManager();
@@ -27,15 +19,12 @@ namespace neat
 		//! Destructor
 		virtual ~GeneManager();
 
-		///
-		/// Gene Manager
-		///
 
-		//!
-		bool FindGene(Gene*& gene, int inNode, int outNode);
+		//! Locates a gene with given input/ouput nodes.
+		bool Find(Gene*& container, int inNode, int outNode);
 
-		//! 
-		Gene* CreateGene(int inNode, int outNode);
+		//! Creates a new gene.
+		bool Create(Gene*& container, int inNode, int outNode);
 
 		//! Completely resets the manager.
 		void Nuke();
@@ -45,7 +34,7 @@ namespace neat
 		//! Complete gene pool.
 		std::vector<Gene*> _GenePool;
 
-		//! Innovation increment
+		//! Innovation increment.
 		int _GeneIdIncrementer = 0;
 
 	};

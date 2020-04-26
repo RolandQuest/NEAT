@@ -302,12 +302,12 @@ namespace neat
 			if (!child->ContainsGene(fromNode, toNode)) {
 
 				Gene* g;
-				if (!GenePool.FindGene(g, fromNode, toNode)) {
+				if (!GenePool.Find(g, fromNode, toNode)) {
 
-					g = GenePool.CreateGene(fromNode, toNode);
+					GenePool.Create(g, fromNode, toNode);
 
-					Innovation* innov = new Innovation(fromNode, toNode);
-					InnovationPool.Register(innov);
+					Innovation* innov;
+					InnovationPool.Create(innov, fromNode, toNode);
 				}
 
 				child->AddGene(g);
@@ -342,23 +342,21 @@ namespace neat
 
 		//Handle innovation tracking.
 		Innovation* innov;
-		if (!InnovationPool.Find(innov, InnovationType::kNode, toSplitData.gene->InputNode(), toSplitData.gene->OutputNode())) {
+		if (!InnovationPool.Find(innov, toSplitData.gene->InputNode(), toSplitData.gene->OutputNode(), toSplitData.gene->GeneId())) {
 
 			int newNodeId = NodePool.CreateNode(NodeType::HIDDEN);
-			innov = new Innovation(toSplitData.gene->InputNode(), toSplitData.gene->OutputNode(), newNodeId);
-			InnovationPool.Register(innov);
+
+			Innovation* innov;
+			InnovationPool.Create(innov, toSplitData.gene->InputNode(), toSplitData.gene->OutputNode(), newNodeId);
 		}
 
 		//The innovation and genes should line up... this might be ripe with simplifications.
 		Gene* gene;
 
-		if (!GenePool.FindGene(gene, innov->From(), innov->NewNodeId())) {
-			gene = GenePool.CreateGene(innov->From(), innov->NewNodeId());
-		}
+		GenePool.Create(gene, innov->From(), innov->NewNodeId());
 		child->AddGene(gene);
-		if (!GenePool.FindGene(gene, innov->NewNodeId(), innov->To())) {
-			gene = GenePool.CreateGene(innov->NewNodeId(), innov->To());
-		}
+
+		GenePool.Create(gene, innov->NewNodeId(), innov->To());
 		child->AddGene(gene);
 
 		return true;

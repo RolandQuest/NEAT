@@ -12,7 +12,9 @@ namespace neat
 	};
 
 	/**
-		
+		A node in the neural network.
+
+		TODO: Abstract activation functions away.
 	*/
 	class Node
 	{
@@ -25,22 +27,22 @@ namespace neat
 		//! Destructor
 		virtual ~Node() = default;
 
-		//!
+		//! Returns the node type.
 		NodeType Type();
 
-		//!
+		//! Sets the incoming value to be activated.
 		void SetIncomingValue(double val);
 
-		//! 
+		//! Adds to the incoming value to be activated.
 		void AddToIncomingValue(double val);
 
-		//!
+		//! Activates the incoming value and returns the result.
 		double Activate();
 
-		//!
+		//! Returns the activated value.
 		double ActivatedValue();
 
-		//!
+		//! Resets incoming/activated values to 0.
 		void Reset();
 
 	private:

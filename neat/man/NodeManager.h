@@ -10,16 +10,11 @@ namespace neat
 
 	/**
 		Has ownership of all created nodes.
-
 	*/
 	class NodeManager
 	{
 
 	public:
-
-		///
-		/// ctors/dtors
-		///
 
 		//! Constructor
 		NodeManager() = default;
@@ -27,26 +22,20 @@ namespace neat
 		//! Destructor
 		virtual ~NodeManager() = default;
 
-		///
-		/// Node Manager
-		///
 
-		//! 
+		//! Creates a new node.
 		int CreateNode(NodeType type);
 
-		//! 
-		Node* CopyNode(size_t nodeId);
-
-		//! 
+		//! Returns all available input nodes.
 		const std::vector<Node*>& InputNodes();
 
-		//!
+		//! Returns all available output nodes.
 		const std::vector<Node*>& OutputNodes();
 
-		//!
+		//! Returns all available hidden nodes.
 		const std::vector<Node*>& HiddenNodes();
 
-		//! 
+		//! Returns all available nodes.
 		const std::vector<Node*>& AllNodes();
 
 		//! Completely resets the manager.

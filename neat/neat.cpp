@@ -71,14 +71,14 @@ namespace neat
 			for (auto& con : initConnections) {
 
 				Gene* gene;
-				if (!GenePool.FindGene(gene, con.first, con.second)) {
+				if (!GenePool.Find(gene, con.first, con.second)) {
 
 					//Record the gene.
-					gene = GenePool.CreateGene(con.first, con.second);
+					GenePool.Create(gene, con.first, con.second);
 
 					//Record the innovation.
-					Innovation* innov = new Innovation(con.first, con.second);
-					InnovationPool.Register(innov);
+					Innovation* innov;
+					InnovationPool.Create(innov, con.first, con.second);
 				}
 
 				//Initialize and add to the genome.

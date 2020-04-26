@@ -3,21 +3,28 @@
 namespace neat
 {
 
-	void InnovationManager::Register(Innovation* innov) {
-		_AllInnovations.push_back(innov);
-	}
-
-	bool InnovationManager::Find(Innovation*& storage, InnovationType type, int from, int to){
+	bool InnovationManager::Find(Innovation*& storage, int from, int to, int newNodeId){
 		
 		for (auto& entry : _AllInnovations) {
 			
-			if (entry->Type() == type && from == entry->From() && to == entry->To()) {
+			if (entry->NewNodeId() == newNodeId && from == entry->From() && to == entry->To()) {
 
 				storage = entry;
 				return true;
 			}
 		}
 		return false;
+	}
+
+	bool InnovationManager::Create(Innovation*& storage, int from, int to, int newNodeId) {
+
+		if (Find(storage, from, to, newNodeId)) {
+			return false;
+		}
+
+		storage = new Innovation(from, to, newNodeId);
+		_AllInnovations.push_back(storage);
+		return true;
 	}
 
 	void InnovationManager::Nuke(){

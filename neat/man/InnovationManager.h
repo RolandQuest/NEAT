@@ -22,11 +22,12 @@ namespace neat
 		//! Destructor
 		virtual ~InnovationManager() = default;
 
-		//! Register an innovation.
-		void Register(Innovation* innov);
 
 		//! Finds an innovation in the current generation.
-		bool Find(Innovation*& storage, InnovationType type, int from, int to);
+		bool Find(Innovation*& storage, int from, int to, int newNodeId = -1);
+
+		//! Register an innovation.
+		bool Create(Innovation*& storage, int from, int to, int newNodeId = -1);
 
 		//! Completely resets the manager.
 		void Nuke();

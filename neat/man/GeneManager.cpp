@@ -13,7 +13,7 @@ namespace neat
 		Nuke();
 	}
 
-	bool GeneManager::FindGene(Gene*& gene, int inNode, int outNode) {
+	bool GeneManager::Find(Gene*& gene, int inNode, int outNode) {
 
 		for (auto& g : _GenePool) {
 			
@@ -25,12 +25,16 @@ namespace neat
 		return false;
 	}
 
-	Gene* GeneManager::CreateGene(int inNode, int outNode) {
+	bool GeneManager::Create(Gene*& container, int inNode, int outNode) {
 
-		Gene* g = new Gene(inNode, outNode, _GeneIdIncrementer);
-		_GenePool.push_back(g);
+		if (Find(container, inNode, outNode)) {
+			return false;
+		}
+
+		container = new Gene(inNode, outNode, _GeneIdIncrementer);
+		_GenePool.push_back(container);
 		_GeneIdIncrementer++;
-		return g;
+		return true;
 	}
 
 	void GeneManager::Nuke() {

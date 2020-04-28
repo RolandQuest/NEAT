@@ -31,10 +31,6 @@ namespace neat
 		virtual ~Genome() = default;
 
 
-		///
-		/// Genome
-		///
-
 		//! Adds a gene with given properties.
 		GeneData& AddGene(Gene* gene, const GeneProperties& props);
 

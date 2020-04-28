@@ -15,7 +15,7 @@ namespace neat
 		for (auto& g : _Genomes) {
 			delete g;
 		}
-		if (deleteTemplate) {
+		if (_DeleteTemplate) {
 			delete _Template;
 		}
 	}
@@ -62,7 +62,7 @@ namespace neat
 		ret->_Age = _Age + 1;
 		ret->_AgeOfLastImprovement = _AgeOfLastImprovement;
 		ret->_BestFitness = _BestFitness;
-		ret->deleteTemplate = true;
+		ret->_DeleteTemplate = true;
 		return ret;
 	}
 

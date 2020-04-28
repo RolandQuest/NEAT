@@ -3,22 +3,38 @@
 #include <time.h>
 
 #include "neat.h"
+#include "tests/Pole1.h"
+
+
+
+
+
+
+
 
 int main() {
 
-	//neat::Rando.seed(10);
+	neat::Rando.seed(10);
 
-	time_t start, end;
-	start = clock();
+	neat::init(4, 2);
 
-	for (size_t i = 0; i < 10000; i++) {
+	for (size_t gen = 0; gen < 10000; gen++) {
 
-		neat::init(4, 4);
+		std::cout << "Generation: " << gen << '\t';
+
+		std::vector<neat::Network*> nets = neat::generateNetworks();
+
+		double bestFitness = 0.0;
+		for (auto& net : nets) {
+
+			double fitness = Pole1::Evaluate(neat::Rando, net);
+			bestFitness = (fitness > bestFitness) ? fitness : bestFitness;
+			net->SetFitness(fitness);
+		}
+
+		std::cout << "Fitness: " << bestFitness << '\n';
 		neat::iterateGeneration();
 	}
-
-	end = clock();
-	std::cout << difftime(end, start) << '\n';
 
 	return 0;
 }

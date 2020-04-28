@@ -9,10 +9,6 @@ namespace neat
 		_Fitness = g->GetFitness();
 	}
 
-	///
-	/// Genome
-	///
-
 	GeneData& Genome::AddGene(Gene* gene, const GeneProperties& props) {
 
 		_GeneData.emplace_back();

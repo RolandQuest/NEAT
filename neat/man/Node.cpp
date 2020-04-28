@@ -40,6 +40,7 @@ namespace neat
 			break;
 		}
 
+		_IncomingValue = 0;
 		return _ActivatedValue;
 	}
 

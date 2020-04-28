@@ -9,7 +9,7 @@
 namespace neat
 {
 	/**
-
+		An entire group of genomes divided into their relative species.
 	*/
 	class Population
 	{
@@ -23,26 +23,22 @@ namespace neat
 		virtual ~Population();
 
 
-		///
-		/// Population
-		///
-
-		//! 
+		//! Adds a genome to the first relative species.
 		void AddGenome(Genome* g);
 
-		//!
+		//! Adds an entire species to the population.
 		void AddSpecies(Species* s);
 
-		//!
+		//! Returns all the species.
 		std::vector<Species*>& GetSpecies();
 
-		//! 
+		//! Creates and returns a vector of all genomes.
 		std::vector<Genome*> GetGenomes();
 
-		//! 
+		//! Returns the number of species.
 		size_t SpeciesCount();
 
-		//! 
+		//! Sorts and records fitness information for all species.
 		void SettleDown(int generation);
 
 	private:

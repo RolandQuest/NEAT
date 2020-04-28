@@ -25,6 +25,10 @@ namespace neat
 		return _AllNodes.size() - 1;
 	}
 	
+	Node* NodeManager::GetNode(int nodeId) {
+		return _AllNodes[nodeId];
+	}
+
 	const std::vector<Node*>& NodeManager::InputNodes() {
 		return _InputNodes;
 	}

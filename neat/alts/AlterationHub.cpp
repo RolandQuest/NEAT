@@ -10,7 +10,6 @@ namespace neat
 
 	double AlterationHub::bestFitness = 0.0;
 	int AlterationHub::bestFitnessGeneration = 0;
-	int AlterationHub::generationsSinceImprovement = 0;
 
 	void AlterationHub::CreateNextGeneration(int curGen, Population* currentPopulation, Population*& newPopulation) {
 
@@ -26,10 +25,6 @@ namespace neat
 		if (popChampion->GetFitness() > bestFitness) {
 			bestFitness = popChampion->GetFitness();
 			bestFitnessGeneration = curGen;
-			generationsSinceImprovement = 0;
-		}
-		else {
-			generationsSinceImprovement++;
 		}
 
 		///
@@ -119,6 +114,7 @@ namespace neat
 		//Premature killing was not done in original algorithm.
 
 		int total_expected = 0;
+		double skim = 0.0;
 		for (auto& spec : specs) {
 
 			double expected = 0.0;
@@ -127,7 +123,15 @@ namespace neat
 			}
 
 			expectedChildren[spec] = (int)expected;
+
+			if (skim >= 1.0) {
+				total_expected++;
+				expectedChildren[spec]++;
+				skim -= 1.0;
+			}
+
 			total_expected += (int)expected;
+			skim += expected - (int)expected;
 		}
 
 		if (total_expected < PopulationSize) {
@@ -178,7 +182,7 @@ namespace neat
 		for (auto& spec : specs) {
 			newPopulation->AddSpecies(spec->GetHollowClone(Rando));
 		}
-		return;
+
 		///
 		/// Reproduction + Mutation
 		/// Ignoring special champion rules.
@@ -190,7 +194,6 @@ namespace neat
 			std::vector<Genome*>& genomes = spec->GetGenomes();
 			int expected = specExpPair.second;
 
-			continue;
 			for (size_t i = 0; i < expected; i++) {
 
 				std::uniform_int_distribution<int> temp(0, genomes.size() - 1);
@@ -268,7 +271,7 @@ namespace neat
 
 	bool AlterationHub::MutateAddLink(Genome*& child) {
 
-		int inputOffset = NodePool.InputNodes().size() + 1;
+		int sensorOffset = NodePool.InputNodes().size() + 1;
 
 		std::set<int> availableFromNodes;
 		std::set<int> availableToNodes;
@@ -277,10 +280,10 @@ namespace neat
 			availableFromNodes.insert(con.gene->InputNode());
 			availableFromNodes.insert(con.gene->OutputNode());
 
-			if (con.gene->InputNode() >= inputOffset) {
+			if (con.gene->InputNode() >= sensorOffset) {
 				availableToNodes.insert(con.gene->InputNode());
 			}
-			if (con.gene->OutputNode() >= inputOffset) {
+			if (con.gene->OutputNode() >= sensorOffset) {
 				availableToNodes.insert(con.gene->OutputNode());
 			}
 		}
@@ -345,8 +348,6 @@ namespace neat
 		if (!InnovationPool.Find(innov, toSplitData.gene->InputNode(), toSplitData.gene->OutputNode(), toSplitData.gene->GeneId())) {
 
 			int newNodeId = NodePool.CreateNode(NodeType::HIDDEN);
-
-			Innovation* innov;
 			InnovationPool.Create(innov, toSplitData.gene->InputNode(), toSplitData.gene->OutputNode(), newNodeId);
 		}
 
@@ -490,11 +491,9 @@ namespace neat
 		return false;
 	}
 
-
 	void AlterationHub::Nuke() {
 
 		bestFitness = 0.0;
 		bestFitnessGeneration = 0;
-		generationsSinceImprovement = 0;
 	}
 }

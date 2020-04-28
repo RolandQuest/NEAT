@@ -91,6 +91,17 @@ namespace neat
 
 	}
 
+	std::vector<Network*> generateNetworks() {
+
+		std::vector<Network*> ret;
+
+		for (auto& entry : CurrentPopulation->GetGenomes()) {
+			ret.push_back(new Network(entry));
+		}
+
+		return ret;
+	}
+
 	void iterateGeneration() {
 
 		Population* newPopulation;
@@ -129,6 +140,5 @@ namespace neat
 	int generationCount() {
 		return _Generation;
 	}
-
 
 }

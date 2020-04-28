@@ -11,11 +11,6 @@ namespace neat
 		}
 	}
 
-
-	///
-	/// Population
-	///
-
 	void Population::AddGenome(Genome* g) {
 
 		for (auto& spec : _Species) {

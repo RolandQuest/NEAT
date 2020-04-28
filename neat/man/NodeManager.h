@@ -26,6 +26,9 @@ namespace neat
 		//! Creates a new node.
 		int CreateNode(NodeType type);
 
+		//! Returns the node with given Id.
+		Node* GetNode(int nodeId);
+
 		//! Returns all available input nodes.
 		const std::vector<Node*>& InputNodes();
 

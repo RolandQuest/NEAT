@@ -60,7 +60,7 @@ namespace neat
 		for (auto& spec : specs) {
 
 			std::vector<Genome*>& genomes = spec->GetGenomes();
-			int numParents = SpeciesNumberOfParentsPercent * (genomes.size() + 1);
+			int numParents = SpeciesNumberOfParentsPercent * ((double) genomes.size() + 1);
 
 			for (size_t gIndex = 0; gIndex < genomes.size(); ++gIndex) {
 
@@ -178,7 +178,7 @@ namespace neat
 			std::vector<Genome*>& genomes = spec->GetGenomes();
 			int expected = specExpPair.second;
 
-			for (size_t i = 0; i < expected; i++) {
+			for (int i = 0; i < expected; i++) {
 
 				std::uniform_int_distribution<int> temp(0, genomes.size() - 1);
 				double prob = ProbabilitySpace(Rando);
@@ -309,6 +309,12 @@ namespace neat
 
 	bool AlterationHub::MutateAddNode(Genome*& child) {
 
+		//Dangerous code below!
+		//The gene data of the genome is a vector of GeneData.
+		//When pushing back via AddGene(), the vector could reallocate the data
+		//to somewhere else and invalidate the pointers in availableCons.
+		//At least I think that's what's going on.
+
 		//Find eligible connections to add node to.
 		std::vector<GeneData*> availableCons;
 		for (auto& entry : child->GetGeneData()) {
@@ -326,6 +332,7 @@ namespace neat
 		std::uniform_int_distribution<int> dist(0, availableCons.size() - 1);
 		GeneData& toSplitData = *availableCons[dist(Rando)];
 		toSplitData.props.frozen = true;
+		double previousWeight = toSplitData.props.weight;
 
 		//Handle innovation tracking.
 		Innovation* innov;
@@ -342,7 +349,8 @@ namespace neat
 		child->AddGene(gene);
 
 		GenePool.Create(gene, innov->NewNodeId(), innov->To());
-		child->AddGene(gene);
+		GeneData& data = child->AddGene(gene);
+		data.props.weight = previousWeight;
 
 		return true;
 	}

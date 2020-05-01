@@ -12,7 +12,7 @@ int main() {
 	neat::SpeciationDeltaThresh = 2.0;
 	neat::init(4, 2);
 
-	for (size_t gen = 0; gen < 10000; gen++) {
+	for (size_t gen = 0; gen < 10; gen++) {
 
 		std::cout << "Generation: " << gen << '\t';
 
@@ -26,11 +26,6 @@ int main() {
 			net->SetFitness(fitness);
 			delete net;
 		}
-
-		if (bestFitness >= 75000) {
-			break;
-		}
-
 
 		std::cout << "Fitness: " << bestFitness << '\n';
 		neat::iterateGeneration();

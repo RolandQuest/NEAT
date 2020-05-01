@@ -25,10 +25,10 @@ namespace neat
 
 		//Record the nodes.
 		NodePool.CreateNode(NodeType::BIAS);
-		for (size_t i = 0; i < inputNodes; i++) {
+		for (int i = 0; i < inputNodes; i++) {
 			NodePool.CreateNode(NodeType::SENSOR);
 		}
-		for (size_t i = 0; i < outputNodes; i++) {
+		for (int i = 0; i < outputNodes; i++) {
 			NodePool.CreateNode(NodeType::OUTPUT);
 		}
 

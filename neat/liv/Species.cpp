@@ -43,7 +43,7 @@ namespace neat
 
 		std::sort(std::begin(_Genomes), std::end(_Genomes),
 			[](Genome* g1, Genome* g2) {
-				return g1->GetFitness() < g2->GetFitness();
+				return g1->GetFitness() > g2->GetFitness();
 			});
 	}
 

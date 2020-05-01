@@ -49,7 +49,7 @@ namespace neat
 			for (int i = 0; i < inputNodes; i++) {
 				initConnections.push_back(std::make_pair(i, inputNodes + distOutput(Rando)));
 			}
-
+			
 			//Connect disconnected output nodes to a random input node.
 			for (int i = 0; i < outputNodes; i++) {
 
@@ -65,7 +65,7 @@ namespace neat
 					initConnections.push_back(std::make_pair(distInput(Rando), inputNodes + i));
 				}
 			}
-
+			
 			Genome* genome = new Genome();
 
 			for (auto& con : initConnections) {
@@ -119,7 +119,10 @@ namespace neat
 		NodePool.Nuke();
 		AlterationHub::Nuke();
 		//clearHistory();
-		delete CurrentPopulation;
+		if (CurrentPopulation != nullptr) {
+			delete CurrentPopulation;
+			CurrentPopulation = nullptr;
+		}
 		_Generation = 0;
 	}
 

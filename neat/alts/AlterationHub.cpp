@@ -31,14 +31,13 @@ namespace neat
 		/// Competitive Coevolution Stagnation Detection
 		///
 
-		if ((curGen + 1) % CCS_Generations) {
+		if ((curGen + 1) % CCS_Generations == 0) {
 
-			for (auto it = std::end(specs) - 1; it != std::begin(specs); --it) {
+			for (int i = specs.size() - 1; 0 < i; --i) {
 
-				if ((*it)->GetAge() >= 20) {
-					specs.erase(it);
-					delete (*it);
-					break;
+				if (specs[i]->GetAge() >= 20) {
+					delete specs[i];
+					specs.erase(std::begin(specs) + i);
 				}
 			}
 		}
@@ -47,20 +46,12 @@ namespace neat
 		/// Species Age Death
 		///
 
-		auto remSpecEnd = std::remove_if(std::begin(specs), std::end(specs), [](Species* s) {
-			// -1 used to be true to original algorithm. Doesn't make much sense to me.
-			// See Species::adjust_fitness() for original functionality.
-			return s->GetAge() - s->GetAgeOfLastImprovement() >= SpeciesDropOffAge - 1;
-		});
-
-		for (auto it = remSpecEnd; it < std::end(specs); ++it) {
-
-			for (auto& entry : (*it)->GetGenomes()) {
-				delete entry;
+		for (int i = specs.size() - 1; 0 <= i; --i) {
+			if (specs[i]->GetAge() - specs[i]->GetAgeOfLastImprovement() >= SpeciesDropOffAge - 1) {
+				delete specs[i];
+				specs.erase(std::begin(specs) + i);
 			}
-			delete* it;
 		}
-		specs.erase(remSpecEnd, std::end(specs));
 
 		///
 		/// Species age significance, fitness sharing, and killing of weaker genomes.
@@ -117,21 +108,14 @@ namespace neat
 		double skim = 0.0;
 		for (auto& spec : specs) {
 
-			double expected = 0.0;
+			double expected = skim;
 			for (auto& genome : spec->GetGenomes()) {
 				expected += genome->GetFitness() / avg_fitness;
 			}
 
 			expectedChildren[spec] = (int)expected;
-
-			if (skim >= 1.0) {
-				total_expected++;
-				expectedChildren[spec]++;
-				skim -= 1.0;
-			}
-
 			total_expected += (int)expected;
-			skim += expected - (int)expected;
+			skim = expected - (int)expected;
 		}
 
 		if (total_expected < PopulationSize) {
@@ -235,12 +219,12 @@ namespace neat
 		///
 
 		std::vector<Species*>& newSpecs = newPopulation->GetSpecies();
-		for (int i = 0; i < newSpecs.size(); ++i) {
+
+		for (int i = newSpecs.size() - 1; i >= 0; i--) {
 			Species* s = newSpecs[i];
 			if (s->GetGenomes().size() == 0) {
-				newSpecs.erase(std::begin(newSpecs) + i);
 				delete s;
-				i--;
+				newSpecs.erase(std::begin(newSpecs) + i);
 			}
 		}
 
@@ -266,7 +250,7 @@ namespace neat
 			return MutateWeights(child);
 		}
 
-		//Problem...
+		return false;
 	}
 
 	bool AlterationHub::MutateAddLink(Genome*& child) {
@@ -372,14 +356,20 @@ namespace neat
 
 			if (gene.props.enabled && !gene.props.frozen) {
 				gene.props.weight *= randposneg() * MutateWeightMaxPower * ProbabilitySpace(Rando);
+
+				if (gene.props.weight > ConnectionWeightMax) {
+					gene.props.weight = ConnectionWeightMax;
+				}
+				else if (gene.props.weight < -ConnectionWeightMax) {
+					gene.props.weight = -ConnectionWeightMax;
+				}
+
 			}
 		}
 		return true;
 	}
 
 	bool AlterationHub::Breed(Genome* mother, Genome* father, Genome*& child) {
-
-		child = new Genome();
 
 		double prob = ProbabilitySpace(Rando);
 
@@ -398,6 +388,7 @@ namespace neat
 		}
 
 		//Problem...
+		return false;
 	}
 
 	bool AlterationHub::BreedMultipoint(Genome* mother, Genome* father, Genome*& child) {

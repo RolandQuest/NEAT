@@ -25,6 +25,9 @@ namespace neat
 		switch (_Type) {
 
 		case NodeType::BIAS:
+			_ActivatedValue = 1.0;
+			break;
+
 		case NodeType::SENSOR:
 			_ActivatedValue = _IncomingValue;
 			break;

@@ -5,17 +5,11 @@
 #include "neat.h"
 #include "tests/Pole1.h"
 
-
-
-
-
-
-
-
 int main() {
 
 	neat::Rando.seed(10);
 
+	neat::SpeciationDeltaThresh = 2.0;
 	neat::init(4, 2);
 
 	for (size_t gen = 0; gen < 10000; gen++) {
@@ -30,11 +24,19 @@ int main() {
 			double fitness = Pole1::Evaluate(neat::Rando, net);
 			bestFitness = (fitness > bestFitness) ? fitness : bestFitness;
 			net->SetFitness(fitness);
+			delete net;
 		}
+
+		if (bestFitness >= 75000) {
+			break;
+		}
+
 
 		std::cout << "Fitness: " << bestFitness << '\n';
 		neat::iterateGeneration();
 	}
+
+	neat::reset();
 
 	return 0;
 }

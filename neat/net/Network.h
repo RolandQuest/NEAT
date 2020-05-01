@@ -25,7 +25,7 @@ namespace neat
 
 
 		//! Initializes the network for use.
-		void Initialize();
+		void Initialize(const std::map<int, double>& input, std::map<int, double>& output);
 
 		//! Sets the input of the network.
 		void SetInput(const std::map<int, double>& input);

@@ -15,22 +15,36 @@ namespace neat
 			_Nodes[data.gene->InputNode()] = NodePool.GetNode(data.gene->InputNode());
 			_Nodes[data.gene->OutputNode()] = NodePool.GetNode(data.gene->OutputNode());
 		}
-
-		Reset();
 	}
 
-	void Network::Initialize() {
+	void Network::Initialize(const std::map<int, double>& input, std::map<int, double>& output) {
 
-		//TODO: This should be done smarter.
-		for (size_t i = 0; i < 5; i++) {
+		Reset();
+
+		bool keepGoing = true;
+		while (keepGoing) {
+
+			SetInput(input);
 			Activate();
+			GetOutput(output);
+
+			keepGoing = false;
+			for (auto& out : output) {
+
+				if (out.second == 0.0) {
+					keepGoing = true;
+					break;
+				}
+			}
 		}
+
 	}
 
 	void Network::SetInput(const std::map<int, double>& input) {
 
 		for (auto& entry : input) {
 			_Nodes[entry.first]->SetIncomingValue(entry.second);
+			_Nodes[entry.first]->Activate();
 		}
 	}
 

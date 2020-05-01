@@ -25,7 +25,6 @@ double Pole1::Evaluate(std::mt19937& rng, neat::Network* net) {
 
     int maxSteps = 100000;
     int steps = 0;
-    int y;
 
     std::map<int, double> inputArray =
     {
@@ -47,36 +46,26 @@ double Pole1::Evaluate(std::mt19937& rng, neat::Network* net) {
         inputArray[2] = (x_Dot + .75) / 1.5;
         inputArray[3] = (theta + twelve_degrees) / .41;
         inputArray[4] = (theta_Dot + 1.0) / 2.0;
-        net->SetInput(inputArray);
-        net->Initialize();
+        net->Initialize(inputArray, outputArray);
     }
 
-    while (steps++ < maxSteps)
+    while (++steps < maxSteps)
     {
         inputArray[1] = (x + 2.4) / 4.8;
         inputArray[2] = (x_Dot + .75) / 1.5;
         inputArray[3] = (theta + twelve_degrees) / .41;
         inputArray[4] = (theta_Dot + 1.0) / 2.0;
-        net->SetInput(inputArray);
 
+        net->SetInput(inputArray);
+        net->Activate();
         net->GetOutput(outputArray);
 
-        double val5 = 0.0;
-        double val6 = 0.0;
-
-        val5 = outputArray[5];
-        val6 = outputArray[6];
-
-        if (val5 > val6)
-        {
-            y = 0;
+        if (outputArray[5] > outputArray[6]) {
+            AdjustCart(0);
         }
-        else
-        {
-            y = 1;
+        else {
+            AdjustCart(1);
         }
-
-        AdjustCart(y);
 
         if (!IsStable())
         {

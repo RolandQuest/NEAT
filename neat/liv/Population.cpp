@@ -38,6 +38,16 @@ namespace neat
 
 		std::vector<Genome*> ret;
 		for (auto& spec : _Species) {
+
+			std::vector<Genome*>& genomes = spec->GetGenomes();
+
+
+			//TEST CODE
+			if (genomes.size() == 0) {
+				continue;
+			}
+
+
 			ret.insert(std::end(ret), std::begin(spec->GetGenomes()), std::end(spec->GetGenomes()));
 		}
 
@@ -57,13 +67,13 @@ namespace neat
 			//This did not make sense to me so I am checking this now.
 			if (spec->GetGenomes()[0]->GetFitness() > spec->GetBestFitness()) {
 				spec->SetAgeOfLastImprovement(generation);
-				spec->SetAgeOfLastImprovement(spec->GetGenomes()[0]->GetFitness());
+				spec->SetBestFitness(spec->GetGenomes()[0]->GetFitness());
 			}
 		}
 
 		std::sort(std::begin(_Species), std::end(_Species),
 			[](Species* c1, Species* c2) {
-				return c1->Champion()->GetFitness() < c2->Champion()->GetFitness();
+				return c1->Champion()->GetFitness() > c2->Champion()->GetFitness();
 			});
 	}
 

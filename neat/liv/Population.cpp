@@ -40,14 +40,6 @@ namespace neat
 		for (auto& spec : _Species) {
 
 			std::vector<Genome*>& genomes = spec->GetGenomes();
-
-
-			//TEST CODE
-			if (genomes.size() == 0) {
-				continue;
-			}
-
-
 			ret.insert(std::end(ret), std::begin(spec->GetGenomes()), std::end(spec->GetGenomes()));
 		}
 

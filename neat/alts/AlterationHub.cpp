@@ -4,7 +4,7 @@
 #include <set>
 
 #include "neat_settings.h"
-
+#include <iostream>
 namespace neat
 {
 
@@ -30,7 +30,7 @@ namespace neat
 		///
 		/// Competitive Coevolution Stagnation Detection
 		///
-
+		
 		if ((curGen + 1) % CCS_Generations == 0) {
 
 			for (int i = specs.size() - 1; 0 < i; --i) {
@@ -41,22 +41,22 @@ namespace neat
 				}
 			}
 		}
-
+		
 		///
 		/// Species Age Death
 		///
-
+		
 		for (int i = specs.size() - 1; 0 <= i; --i) {
 			if (specs[i]->GetAge() - specs[i]->GetAgeOfLastImprovement() >= SpeciesDropOffAge - 1) {
 				delete specs[i];
 				specs.erase(std::begin(specs) + i);
 			}
 		}
-
+		
 		///
 		/// Species age significance, fitness sharing, and killing of weaker genomes.
 		///
-
+		
 		for (auto& spec : specs) {
 
 			std::vector<Genome*>& genomes = spec->GetGenomes();
@@ -88,13 +88,20 @@ namespace neat
 
 			genomes.erase(std::begin(genomes) + numParents, std::end(genomes));
 		}
-
+		
 		///
 		/// Expected children of each species.
 		///
 
-		std::map<Species*, int> expectedChildren;
+		/*
+			!!! RNG BUG FIXED !!!
+			The map of expected children is ordered differently every time!
+			Because the map key is a pointer, the order of the species changes with every run.
+			So when creating the next generation and speciating the next generation, order may matter.
+		*/
 
+		std::map<Species*, int> expectedChildren;
+		
 		double avg_fitness = 0.0;
 		for (auto& g : currentPopulation->GetGenomes()) {
 			avg_fitness += g->GetFitness();
@@ -123,6 +130,7 @@ namespace neat
 			//Find species with most expecting.
 			Species* best_species;
 			int max_expected = 0;
+			
 			for (auto& specExpPair : expectedChildren) {
 
 				if (specExpPair.second > max_expected) {
@@ -147,10 +155,10 @@ namespace neat
 					return false;
 					});
 
-				specs.resize(1);
+				specs.erase(std::begin(specs) + 1, std::end(specs));
 			}
 		}
-
+		
 		/*
 			Need to implement Population level stagnation and delta coding.
 			population.cpp lines 578 - 631 abouts.
@@ -172,11 +180,10 @@ namespace neat
 		/// Ignoring special champion rules.
 		///
 
-		for (auto& specExpPair : expectedChildren) {
+		for(auto& spec : specs){
 
-			Species* spec = specExpPair.first;
 			std::vector<Genome*>& genomes = spec->GetGenomes();
-			int expected = specExpPair.second;
+			int expected = expectedChildren[spec];
 
 			for (int i = 0; i < expected; i++) {
 
@@ -188,8 +195,12 @@ namespace neat
 					std::uniform_int_distribution<int> temp(0, genomes.size() - 1);
 
 					Genome* child;
+
 					//Put in catch for failed attempt.
-					Mutate(genomes[temp(Rando)], child);
+					if (!Mutate(genomes[temp(Rando)], child)) {
+						std::cout << "MutationFail1" << '\n';
+					}
+
 					newPopulation->AddGenome(child);
 					continue;
 				}
@@ -199,12 +210,18 @@ namespace neat
 
 				Genome* child;
 				//Put in catch for failed breed.
-				Breed(genomes[temp(Rando)], genomes[temp(Rando)], child);
+				if (!Breed(genomes[temp(Rando)], genomes[temp(Rando)], child)) {
+					std::cout << "BreedFail" << '\n';
+				}
 
 				//Mutate if parents are the same.
 				if (prob >= BreedOnlyProbability) {
 					Genome* mutChild;
-					Mutate(child, mutChild);
+
+					if (!Mutate(child, mutChild)) {
+						std::cout << "MutationFail2" << '\n';
+					}
+
 					delete child;
 					child = mutChild;
 				}
@@ -227,12 +244,12 @@ namespace neat
 				newSpecs.erase(std::begin(newSpecs) + i);
 			}
 		}
-
 	}
 
 	bool AlterationHub::Mutate(Genome* orig, Genome*& child) {
 
 		child = new Genome(orig);
+		return true;
 		
 		double prob = ProbabilitySpace(Rando);
 
@@ -363,7 +380,7 @@ namespace neat
 		for (auto& gene : geneData) {
 
 			if (gene.props.enabled && !gene.props.frozen) {
-				gene.props.weight *= randposneg() * MutateWeightMaxPower * ProbabilitySpace(Rando);
+				gene.props.weight += gene.props.weight * randposneg() * MutateWeightMaxPower * ProbabilitySpace(Rando);
 
 				if (gene.props.weight > ConnectionWeightMax) {
 					gene.props.weight = ConnectionWeightMax;
@@ -378,6 +395,9 @@ namespace neat
 	}
 
 	bool AlterationHub::Breed(Genome* mother, Genome* father, Genome*& child) {
+
+		child = new Genome(mother);
+		return true;
 
 		double prob = ProbabilitySpace(Rando);
 

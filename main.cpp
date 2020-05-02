@@ -12,7 +12,7 @@ int main() {
 	neat::SpeciationDeltaThresh = 2.0;
 	neat::init(4, 2);
 
-	for (size_t gen = 0; gen < 10; gen++) {
+	for (size_t gen = 0; gen < 3; gen++) {
 
 		std::cout << "Generation: " << gen << '\t';
 
